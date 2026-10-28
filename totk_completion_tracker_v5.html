@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOTK Completion Tracker</title>
+<style>
+:root{color-scheme:dark;--bg:#101714;--panel:#19231e;--panel2:#202d26;--text:#eef5ec;--muted:#a9b9aa;--line:#35463a;--accent:#b7e38a;--gold:#e7c66d;--red:#ff9e8d}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#101714,#17231c 55%,#101714);color:var(--text);font:15px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:24px 18px 16px;max-width:1200px;margin:auto}h1{font-size:clamp(25px,5vw,38px);margin:0 0 5px}h2{font-size:18px;margin:0 0 12px}p{margin:6px 0;color:var(--muted)}.eyebrow{color:var(--accent);text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800}
+main{max-width:1200px;margin:auto;padding:0 18px 32px}.notice{background:#342d1b;border:1px solid #75633a;border-radius:12px;padding:12px 14px;color:#f6e8b8;margin:10px 0 16px}.grid{display:grid;grid-template-columns: minmax(260px,330px) minmax(0,1fr);gap:16px}.panel{background:rgba(25,35,30,.95);border:1px solid var(--line);border-radius:16px;padding:15px;min-width:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.stat{background:var(--panel2);padding:11px;border-radius:11px}.stat strong{display:block;font-size:22px;color:var(--accent)}.stat span{font-size:11px;color:var(--muted)}
+button,.button,input,select{font:inherit}button,.button{border:1px solid var(--line);background:#26372c;color:var(--text);border-radius:10px;padding:9px 11px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}button:hover,.button:hover{border-color:var(--accent)}button.primary{background:var(--accent);color:#172016;font-weight:800;border-color:var(--accent)}button.danger{color:var(--red)}input[type=search],input[type=text],select{width:100%;background:#111a15;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0}input[type=checkbox]{accent-color:var(--accent);width:17px;height:17px;flex:0 0 auto}.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.toolbar>*{flex:1}.cat-list{display:grid;gap:7px}.cat{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:9px;background:#202d26}.cat label{display:flex;align-items:center;gap:9px;flex:1;cursor:pointer}.count{font-size:12px;color:var(--muted);white-space:nowrap}.progressbar{height:8px;background:#101714;border-radius:99px;overflow:hidden;margin:9px 0}.progressbar>div{height:100%;width:0;background:var(--accent);transition:width .2s}.list-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.items{display:grid;gap:7px;margin-top:12px}.item{display:flex;align-items:flex-start;gap:10px;padding:11px;background:#202d26;border:1px solid transparent;border-radius:11px}.item.done{opacity:.65}.item.done .item-name{text-decoration:line-through;color:var(--muted)}.item-main{min-width:0;flex:1}.item-name{font-weight:700;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--muted);margin-top:3px}.pill{display:inline-block;background:#33463a;border-radius:99px;padding:2px 7px;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#d9edcf;margin-right:4px}.item-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.item-actions a,.item-actions button{font-size:12px;padding:5px 8px}.empty{padding:26px 12px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}.small{font-size:12px}.muted{color:var(--muted)}.section-label{margin:16px 0 7px;color:var(--accent);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:800}.mapbox{background:#111a15;border:1px dashed var(--line);border-radius:12px;padding:14px;margin-top:12px}.footer{font-size:12px;color:var(--muted);margin-top:18px}.hide{display:none!important}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}header{padding-top:18px}.panel{padding:12px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="eyebrow">Hyrule field notes</div>
+ <h1>TOTK Completion Tracker</h1>
+ <p>Track individual discoveries, filter categories, and keep your own completion record.</p>
+ <div class="notice"><strong>Dataset note:</strong> Load the public object-map records, then filter by enemy/item family and layer. Surface includes caves. Quest-event actors are excluded from enemy spawns; Master Kohga is tracked once as a Side Adventure.</div>
+ <div class="panel" style="margin:12px 0 16px">
+  <div class="list-head"><div><h2 style="margin-bottom:2px">Live location source</h2><p>Use the source map for location detail. In your checklist, one family filter includes every variant; Surface includes cave locations.</p></div><a class="button" target="_blank" rel="noopener" href="https://vetyst.github.io/TotK-Object-Map/">Open full object map ↗</a></div>
+  <div style="height:min(68vh,650px);min-height:360px;margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#111a15">
+   <iframe title="TOTK Object Map" src="https://vetyst.github.io/TotK-Object-Map/" style="width:100%;height:100%;border:0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <p class="small">The map is hosted by its original creator. The button in Filters & tools imports real enemy and treasure-chest records into the grouped checklist below.</p>
+ </div>
+ <div class="stats">
+  <div class="stat"><strong id="doneCount">0</strong><span>COMPLETED</span></div>
+  <div class="stat"><strong id="totalCount">0</strong><span>TRACKED ITEMS</span></div>
+  <div class="stat"><strong id="percent">0%</strong><span>PROGRESS</span></div>
+ </div>
+ <div class="progressbar"><div id="progressFill"></div></div>
+</header>
+<main>
+<div class="grid">
+ <aside class="panel">
+  <h2>Filters & tools</h2>
+  <p>Toggle categories to show only what you're hunting for.</p>
+  <div class="toolbar">
+   <button id="allCats">All on</button><button id="noCats">All off</button>
+  </div>
+  <div class="cat-list" id="categories"></div>
+  <div class="section-label">Search</div>
+  <input id="search" type="search" placeholder="e.g. King Gleeok, Barbarian Greaves, Korok…">
+  <div class="section-label">Location layer</div>
+  <select id="layer">
+   <option value="all">All layers</option><option>Surface</option><option>Sky</option><option>Depths</option><option>Unknown</option>
+  </select>
+  <div class="section-label">Enemy / item variant</div>
+  <select id="variant"><option value="all">All variants</option></select>
+  <p class="small">Family toggles show every variant together (e.g. all Hinox). Use this only when you want to narrow to a colour/type.</p>
+  <div class="section-label">Completion view</div>
+  <div class="cat"><label><input type="checkbox" id="hideDone"> Hide completed items</label></div>
+  <div class="toolbar"><button id="loadSource" class="primary">Load real enemy & chest locations</button></div>
+  <p id="loadStatus" class="small muted">Loads recognisable in-game enemies, bosses, chests and equipment from the public TOTK Object Map repository. Technical actors (such as invisible walls and spawners) are filtered out. Internet connection required.</p>
+  <div class="toolbar"><button id="export">Export progress</button><button id="importBtn">Import dataset / backup</button><input id="file" type="file" accept=".json,.csv" class="hide"></div>
+  <button id="addBtn" class="primary" style="width:100%">＋ Add custom item</button>
+  <p class="small">Progress is saved in this browser on this device. Export a backup before clearing browser data. For imported records, use a stable unique ID per location.</p>
+  <div class="mapbox">
+   <strong>Location map links</strong>
+   <p class="small">This tracker doesn't invent coordinates. Each item can link out to a source map. For a full map with verified coordinates, use the source map and import its dataset when available.</p>
+   <div class="toolbar"><a class="button" target="_blank" rel="noopener" href="https://questfern.com/totk/guides/interactive-map/">QuestFern map ↗</a><a class="button" target="_blank" rel="noopener" href="https://zeldacentral.com/games/tears-of-the-kingdom/map/">Zelda Central ↗</a></div>
+  </div>
+ </aside>
+ <section class="panel">
+  <div class="list-head"><div><h2 style="margin-bottom:2px">Your checklist</h2><p id="resultText">Loading items…</p></div><select id="sort" style="width:auto;max-width:170px"><option value="category">Category</option><option value="name">Name A–Z</option><option value="incomplete">Incomplete first</option></select></div>
+  <div id="items" class="items"></div>
+  <div class="footer">Family filters group variants together; layer and variant filters can be combined. Surface includes caves. Side-adventure events such as Master Kohga are tracked as quests, not duplicated as enemy spawns.</div>
+ </section>
+</div>
+</main>
+<script>
+const STORAGE_KEY='totkTrackerItems_v1', CAT_KEY='totkTrackerCats_v1';
+const defaultItems=[]
+let items=loadItems(), categoriesOn=loadCats();
+function loadItems(){try{let x=JSON.parse(localStorage.getItem(STORAGE_KEY));return Array.isArray(x)?x:defaultItems.map(x=>({...x,done:false}));}catch(e){return defaultItems.map(x=>({...x,done:false}));}}
+function loadCats(){try{return JSON.parse(localStorage.getItem(CAT_KEY))||{};}catch(e){return {};}}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(items));localStorage.setItem(CAT_KEY,JSON.stringify(categoriesOn));}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function familyCategory(x){
+ const raw=String(x.family||x.category||x.type||x.group||'Other');
+ const text=(String(x.name||'')+' '+raw+' '+String(x.variant||'')).toLowerCase();
+ if(/treasure chest|enemy treasure chest|\bchest\b/i.test(text))return 'Treasure Chests';
+ if(/master kohga of the yiga clan|master kohga side adventure/i.test(text))return 'Side Adventures';
+ if(/\b(korok|koroks|korok seed)\b/i.test(text))return 'Korok Seeds';
+ const families=[
+  [/\b(hinox|blue hinox|black hinox|red hinox|stalnox)\b/i,'Hinox'],
+  [/\b(lynel)\b/i,'Lynel'],[/\b(talus|stone talus|igneo talus|frost talus|battle talus)\b/i,'Talus'],
+  [/\b(gleeok)\b/i,'Gleeok'],[/\b(frox)\b/i,'Frox'],[/\b(flux construct)\b/i,'Flux Construct'],
+  [/\b(molduga)\b/i,'Molduga'],[/\b(gloom spawn|phantom ganon)\b/i,'Gloom Spawn / Phantom Ganon'],
+  [/\b(bokoblin)\b/i,'Bokoblin'],[/\b(moblin)\b/i,'Moblin'],[/\b(lizalfos)\b/i,'Lizalfos'],
+  [/\b(horriblin)\b/i,'Horriblin'],[/\b(wizzrobe)\b/i,'Wizzrobe'],[/\b(keese)\b/i,'Keese'],
+  [/\b(chuchu)\b/i,'Chuchu'],[/\b(like like)\b/i,'Like Like'],[/\b(construct|soldier construct|captain construct)\b/i,'Construct'],
+  [/\b(colgera)\b/i,'Colgera'],[/\b(marbled gohma)\b/i,'Marbled Gohma'],[/\b(queen gibdo)\b/i,'Queen Gibdo'],[/\b(mucktorok)\b/i,'Mucktorok'],[/\b(seized construct)\b/i,'Seized Construct'],[/\b(ganondorf|demon king)\b/i,'Ganondorf'],[/\b(master kohga)\b/i,'Master Kohga'],[/\b(aerocuda)\b/i,'Aerocuda'],[/\b(octorok)\b/i,'Octorok'],[/\b(yiga)\b/i,'Yiga'],
+  [/\b(bubbulfrog)\b/i,'Bubbulfrog'],[/\b(korok)\b/i,'Korok Seeds'],[/\b(shrine)\b/i,'Shrines'],
+  [/\b(lightroot)\b/i,'Lightroots'],[/\b(treasure chest|chest)\b/i,'Treasure Chests'],
+  [/\b(armor|armour)\b/i,'Armour'],[/\b(weapon|sword|spear|claymore|bow|shield)\b/i,'Weapons & Equipment']
+ ];
+ for(const [re,group] of families){if(re.test(text))return group;}
+ return raw;
+}
+function variantLabel(x){
+ if(x.variant)return String(x.variant);
+ const name=String(x.name||'');
+ const family=familyCategory(x);
+ if(family==='Hinox' && /^Hinox$/i.test(name.trim()))return 'Red Hinox';
+ if(family==='Hinox' && /^Stalnox$/i.test(name.trim()))return 'Stalnox';
+ let v=name.replace(new RegExp('^'+family.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*[:—-]?\\s*','i'),'').trim();
+ if(v && v.toLowerCase()!==name.toLowerCase())return v;
+ const m=name.match(/\b(Red|Blue|Black|Silver|White-Maned|White Maned|Stal|Fire|Ice|Thunder|King|Obsidian|Rare|Luminous|Battle|Soldier|Captain|Mighty|Mighty Construct|Strong|Strong Construct|Pristine|Decayed)\b/i);
+ return m?m[0]+' variant':'Standard / unspecified';
+}
+function cats(){return [...new Set(items.map(x=>familyCategory(x)))].sort((a,b)=>a.localeCompare(b));}
+function renderVariants(){
+ const sel=document.getElementById('variant'), old=sel.value;
+ const vals=[...new Set(items.map(variantLabel))].sort((a,b)=>a.localeCompare(b));
+ sel.innerHTML='<option value="all">All variants</option>'+vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+ sel.value=vals.includes(old)?old:'all';
+}
+function renderCats(){const box=document.getElementById('categories');box.innerHTML='';cats().forEach(c=>{let count=items.filter(x=>familyCategory(x)===c).length;let checked=categoriesOn[c]!==false;let row=document.createElement('div');row.className='cat';row.innerHTML=`<label><input type="checkbox" ${checked?'checked':''} data-cat="${esc(c)}"><span>${esc(c)}</span></label><span class="count">${count}</span>`;box.appendChild(row);});box.querySelectorAll('input').forEach(i=>i.addEventListener('change',()=>{categoriesOn[i.dataset.cat]=i.checked;save();renderItems();}));}
+function renderItems(){let q=document.getElementById('search').value.toLowerCase().trim(), layer=document.getElementById('layer').value, variant=document.getElementById('variant').value, hide=document.getElementById('hideDone').checked, sort=document.getElementById('sort').value;
+let filtered=items.filter(x=>categoriesOn[familyCategory(x)]!==false && (!hide||!x.done) && (layer==='all'||((String(x.layer||'Unknown').toLowerCase()==='caves'?'Surface':String(x.layer||'Unknown'))===layer)) && (variant==='all'||variantLabel(x)===variant) && (!q||[x.name,x.category,familyCategory(x),variantLabel(x),x.region,x.notes,x.coordinates].join(' ').toLowerCase().includes(q)));
+filtered.sort((a,b)=>sort==='name'?a.name.localeCompare(b.name):sort==='incomplete'?Number(a.done)-Number(b.done)||a.name.localeCompare(b.name):(a.category||'').localeCompare(b.category||'')||a.name.localeCompare(b.name));
+document.getElementById('resultText').textContent=`Showing ${filtered.length} of ${items.length} items`;
+const root=document.getElementById('items');root.innerHTML='';
+if(!filtered.length){root.innerHTML='<div class="empty">No location records are loaded yet. Tap “Load real enemy & chest locations” to fetch verified source records, or import your own dataset.</div>';}
+filtered.forEach(x=>{const el=document.createElement('article');el.className='item'+(x.done?' done':'');let coord=x.coordinates?` · ${esc(x.coordinates)}`:'';let url=x.url||'https://zeldacentral.com/games/tears-of-the-kingdom/map/';el.innerHTML=`<input type="checkbox" aria-label="Mark ${esc(x.name)} complete" ${x.done?'checked':''} data-done="${esc(x.id)}"><div class="item-main"><div class="item-name">${esc(x.name)}</div><div class="meta"><span class="pill">${esc(familyCategory(x))}</span><span class="pill">${esc(variantLabel(x))}</span>${esc(x.layer||'Unknown')} · ${esc(x.region||'Region unknown')}${coord}</div>${x.notes?`<div class="meta">${esc(x.notes)}</div>`:''}<div class="item-actions"><a class="button" target="_blank" rel="noopener" href="${esc(url)}">Find on source map ↗</a><button data-edit="${esc(x.id)}">Edit</button><button class="danger" data-delete="${esc(x.id)}">Delete</button></div></div>`;root.appendChild(el);});
+root.querySelectorAll('[data-done]').forEach(i=>i.addEventListener('change',()=>{let x=items.find(x=>x.id===i.dataset.done);if(x)x.done=i.checked;save();renderAll();}));
+root.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>{if(confirm('Delete this item from your tracker?')){items=items.filter(x=>x.id!==b.dataset.delete);save();renderAll();}}));
+root.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>editItem(b.dataset.edit)));
+let done=items.filter(x=>x.done).length,total=items.length,p=total?Math.round(done/total*100):0;document.getElementById('doneCount').textContent=done;document.getElementById('totalCount').textContent=total;document.getElementById('percent').textContent=p+'%';document.getElementById('progressFill').style.width=p+'%';
+}
+
+const SOURCE_BASE='https://raw.githubusercontent.com/vetyst/TotK-Object-Map/master/data/v1.2.0/';
+const SOURCE_LAYERS=['surface','depths','sky','cave']; // cave records are deliberately folded into Surface
+function sourceFamily(actor,name){
+ const n=String(name||'').trim();
+ const a=String(actor||'').trim();
+ // Engine/collision actors are not completion targets. Kohga's special invisible-wall actor is a quest event, not an enemy spawn.
+ if(/air.?wall|wall.?enemy|collision|spawner|generator|area.?marker|sensor|target.?dummy|dummy|event.?receiver|sound.?effect|effect.?emitter|camera|trigger/i.test(a+' '+n)) return null;
+ if(/master.?kohga/i.test(a+' '+n)) return null; // tracked once as the side adventure below
+ if(/^TBox_|^RBox_/.test(a) || /treasure chest/i.test(n)) return 'Treasure Chests';
+ if(/korok/i.test(a+' '+n)) return 'Korok Seeds';
+ // Keep only recognisable in-game enemy / boss families; do not import arbitrary Enemy_* engine objects.
+ const enemyNames=/\b(hinox|stalnox|lynel|gleeok|frox|flux construct|molduga|talus|bokoblin|moblin|lizalfos|horriblin|like like|wizzrobe|gloom spawn|phantom ganon|colgera|marbled gohma|queen gibdo|mucktorok|seized construct|ganondorf|aerocuda|gibdo|keese|chuchu|octorok|yiga|construct|pebblit|evermean|dondons|yiga blademaster|yiga footsoldier|battle talus|stone talus|igneo talus|frost talus|deku tree|gloom hands|boss bokoblin|captain construct|soldier construct)\b/i;
+ if(enemyNames.test(n) || enemyNames.test(a.replace(/^Enemy_/i,'').replace(/_/g,' '))) return 'Enemies & Bosses';
+ if(/^(Weapon_|Armor_|Bow_|Shield_)/.test(a) && !/dummy|test|placeholder|spawner|generator/i.test(a+' '+n)) return 'Weapons & Armour';
+ return null;
+}
+function korokHint(actor,name){
+ const s=(String(actor||'')+' '+String(name||'')).toLowerCase().replace(/[_-]+/g,' ');
+ if(/flower|dandelion/.test(s)) return 'Korok clue: follow the flowers to the end of the trail.';
+ if(/carry|plug|cork|boulder|rock.*hole|stone.*circle/.test(s)) return 'Korok clue: inspect the nearby object or missing piece and move it into the matching spot.';
+ if(/pinwheel|balloon|target|archery/.test(s)) return 'Korok clue: use the pinwheel as a cue; hit the targets that appear before time runs out.';
+ if(/race|time trial|ring/.test(s)) return 'Korok clue: start the nearby race and reach the glowing finish marker before time runs out.';
+ if(/puzzle|korok/.test(s)) return 'Korok clue: check nearby flowers, a lone rock, a pinwheel, a trail, or an object that looks out of place. The exact puzzle type is not encoded in this source record.';
+ return '';
+}
+function curatedLocationNote(display,layer){
+ const n=String(display||'').toLowerCase();
+ if(layer==='cave' && /barbarian armor/.test(n)) return 'Cave location: Crenel Hills Cave. The Barbarian Armor chest is inside the cave.';
+ if(layer==='cave' && /barbarian helm/.test(n)) return 'Cave location: Robred Dropoff Cave. The Barbarian Helm chest is inside the cave.';
+ if(layer==='cave' && /barbarian (leg wraps|greaves)/.test(n)) return 'Cave location: Walnot Mountain Cave. The Barbarian Leg Wraps chest is inside the cave.';
+ return '';
+}
+function curatedQuestItems(){return [{id:'quest:master-kohga-yiga-clan',name:'Master Kohga of the Yiga Clan',category:'Side Adventures',family:'Side Adventures',variant:'Side Adventure',layer:'Depths',region:'The Depths',coordinates:'',notes:'Side Adventure — complete Master Kohga’s encounters across the Depths. His “Air Wall Enemy_Kohga” entries are technical quest-event objects, so they are intentionally not listed as separate enemies.',url:'https://objmap-totk.zeldamods.org/',done:false}];}
+
+function layerTitle(layer){return ({surface:'Surface',depths:'Depths',sky:'Sky',cave:'Surface'})[layer]||layer;}
+async function loadRealSource(){
+ const btn=document.getElementById('loadSource'),status=document.getElementById('loadStatus');
+ btn.disabled=true;btn.textContent='Loading source data…';
+ status.textContent='Downloading the official public dataset files. Large files may take a little while; keep this page open.';
+ try{
+  const [filters,...layerData]=await Promise.all([
+   fetch(SOURCE_BASE+'item-filters.json').then(r=>{if(!r.ok)throw new Error('Could not download item names');return r.json();}),
+   ...SOURCE_LAYERS.map(layer=>fetch(SOURCE_BASE+'layers/'+layer+'.json').then(r=>{if(!r.ok)throw new Error('Could not download '+layer+' locations');return r.json();}))
+  ]);
+  const imported=[];
+  for(let li=0;li<SOURCE_LAYERS.length;li++){
+   const layer=SOURCE_LAYERS[li],groups=layerData[li];
+   for(const [actor,group] of Object.entries(groups)){
+    const display=String(group.name||filters[actor]?.name||actor).trim();
+    const family=sourceFamily(actor,display);
+    if(!family || !Array.isArray(group.locations))continue;
+    for(let i=0;i<group.locations.length;i++){
+     const p=group.locations[i]||{};
+     const hash=String(p.hash||p.id||`${p.x},${p.y},${p.z},${i}`);
+     const mappedLayer=layer==='cave'?'surface':layer;
+     const id=`objmap:${layer}:${actor}:${hash}`;
+     let name=display||actor;
+     let variant='';
+     if(family==='Treasure Chests'){
+      // Dataset names encode the chest contents after the colon, e.g. "Treasure Chest : Climbing Gear".
+      const parts=name.split(':').map(s=>s.trim());
+      name=parts.length>1?`${parts[0]} — ${parts.slice(1).join(' : ')}`:name;
+      variant=parts.length>1?parts.slice(1).join(' : '):'Contents unspecified';
+     }else if(family==='Enemies & Bosses'){
+      const primary=name.split(':')[0].trim();
+      const rank=primary.match(/^(Silver|Black|Blue|Red|White-Maned|White Maned|Armored|Frost|Flame|Thunder|King)\s+(.+)$/i);
+      if(rank)variant=rank[1].replace(/-/g,' ')+' '+rank[2].trim();
+      else if(/^Hinox$/i.test(primary))variant='Red Hinox';
+      else if(/^Stalnox$/i.test(primary))variant='Stalnox';
+      else variant=primary||'Standard / unspecified';
+     }else if(family==='Korok Seeds'){variant='Korok Seed';}
+     else variant=actor;
+     const region=String(p.region||p.area||p.locationName||group.region||group.area||'');
+     const caveNote=layer==='cave'?'Located in a cave. Caves are grouped under Surface in the layer filter.': '';
+     const korokNote=family==='Korok Seeds'?korokHint(actor,display):'';
+     const gearCaveNote=layer==='cave'&&family==='Treasure Chests'&&/barbarian|climbing|rubber|fierce deity|phantom|ember|frostbite|charged|zonaite|armor|armour|greaves|helm|trousers|tunic/i.test(display)?`Cave treasure. ${region?`Cave/area: ${region}. `:''}Caves are grouped under Surface.`:'';
+     const curatedNote=curatedLocationNote(display,layer);
+     const notes=[curatedNote,caveNote,gearCaveNote,korokNote,`Source actor: ${actor}${p.hash?` · Object hash: ${p.hash}`:''}`].filter(Boolean).join(' ');
+     imported.push({
+      id,name,category:family,family,variant,layer:layerTitle(layer),region,
+      coordinates:`X ${p.y??'?'}, Y ${p.x??'?'}, Z ${p.z??'?'}`,
+      notes,
+      url:'https://vetyst.github.io/TotK-Object-Map/',
+      done:false
+     });
+    }
+   }
+  }
+  if(!imported.length)throw new Error('The source files loaded, but no matching enemy, Korok, chest or equipment records were found. The source format may have changed.');
+  // Add curated quest tracker entries once, rather than treating quest-event actors as enemies.
+  imported.push(...curatedQuestItems());
+  const oldById=new Map(items.map(x=>[x.id,x]));
+  const merged=imported.map(x=>oldById.has(x.id)?{...x,done:!!oldById.get(x.id).done}:x);
+  const importedIds=new Set(merged.map(x=>x.id));
+  // Keep the user's custom entries and any prior records from other datasets.
+  const custom=items.filter(x=>!String(x.id).startsWith('objmap:') && !/air.?wall.?enemy.?kohga/i.test(String(x.name||'')+' '+String(x.id||'')));
+  items=[...custom,...merged];
+  save();renderAll();
+  const enemies=merged.filter(x=>x.category==='Enemies & Bosses').length;
+  const chests=merged.filter(x=>x.category==='Treasure Chests').length;
+  const gear=merged.filter(x=>x.category==='Weapons & Armour').length;
+  const koroks=merged.filter(x=>familyCategory(x)==='Korok Seeds').length;
+  const quests=merged.filter(x=>familyCategory(x)==='Side Adventures').length;
+  status.textContent=`Loaded ${merged.length.toLocaleString()} records: ${enemies.toLocaleString()} enemy/boss locations, ${chests.toLocaleString()} chest records, ${gear.toLocaleString()} weapon/armour records, ${koroks.toLocaleString()} Korok records, and ${quests.toLocaleString()} quest tracker. Cave records are folded into Surface. Existing completion marks were preserved where IDs matched.`;
+  btn.textContent='Refresh real locations';
+ }catch(err){
+  status.textContent='Could not load the source dataset: '+err.message+'. Check your internet connection and try again. If this persists, download the repository ZIP and upload it here so I can build an offline dataset.';
+  btn.textContent='Retry loading source data';
+ }finally{btn.disabled=false;}
+}
+document.getElementById('loadSource').addEventListener('click',loadRealSource);
+
+function renderAll(){renderCats();renderVariants();renderItems();}
+function editItem(id){let x=items.find(x=>x.id===id);if(!x)return;let name=prompt('Item name:',x.name);if(name===null)return;let category=prompt('Family/category (e.g. Hinox, Bokoblin, Shrines):',x.category||'Other');if(category===null)return;let variant=prompt('Variant (e.g. Red Hinox, Silver Bokoblin; optional):',x.variant||'');if(variant===null)return;let layer=prompt('Layer: Surface, Sky, Depths, or Unknown',x.layer||'Unknown');if(layer===null)return;let region=prompt('Region / cave name:',x.region||'');if(region===null)return;let coordinates=prompt('Coordinates (optional):',x.coordinates||'');if(coordinates===null)return;let notes=prompt('Location notes / puzzle directions:',x.notes||'');if(notes===null)return;let url=prompt('Source map URL (optional):',x.url||'');if(url===null)return;Object.assign(x,{name:name.trim()||x.name,category:category.trim()||'Other',variant:variant.trim(),layer:layer.trim()||'Unknown',region:region.trim(),coordinates:coordinates.trim(),notes:notes.trim(),url:url.trim()});save();renderAll();}
+document.getElementById('addBtn').onclick=()=>{let name=prompt('Item name:');if(!name)return;let category=prompt('Family/category (e.g. Hinox, Bokoblin, Shrines):', 'Other')||'Other';let variant=prompt('Variant (e.g. Red Hinox, Silver Bokoblin; optional):','')||'';let layer=prompt('Layer: Surface, Sky, Depths, or Unknown','Unknown')||'Unknown';let region=prompt('Region (optional):','')||'';let coordinates=prompt('Coordinates (optional):','')||'';let notes=prompt('Notes / puzzle directions (optional):','')||'';let url=prompt('Source map URL (optional):','')||'';items.push({id:'custom-'+Date.now()+'-'+Math.random().toString(16).slice(2),name:name.trim(),category:category.trim(),variant:variant.trim(),layer:layer.trim(),coordinates:coordinates.trim(),notes:notes.trim(),url:url.trim(),done:false});save();renderAll();};
+document.getElementById('search').addEventListener('input',renderItems);document.getElementById('layer').addEventListener('change',renderItems);document.getElementById('variant').addEventListener('change',renderItems);document.getElementById('hideDone').addEventListener('change',renderItems);document.getElementById('sort').addEventListener('change',renderItems);
+document.getElementById('allCats').onclick=()=>{cats().forEach(c=>categoriesOn[c]=true);save();renderAll();};document.getElementById('noCats').onclick=()=>{cats().forEach(c=>categoriesOn[c]=false);save();renderAll();};
+document.getElementById('export').onclick=()=>{const blob=new Blob([JSON.stringify({format:'totk-completion-tracker-v1',items,categoriesOn},null,2)],{type:'application/json'});download(blob,'totk-progress-backup.json');};
+document.getElementById('importBtn').onclick=()=>document.getElementById('file').click();
+function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+document.getElementById('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const txt=await f.text();let incoming;if(f.name.toLowerCase().endsWith('.csv'))incoming=parseCSV(txt);else{let parsed=JSON.parse(txt);incoming=Array.isArray(parsed)?parsed:(parsed.items||parsed.locations||parsed.data||[]);if(parsed.categoriesOn)categoriesOn={...categoriesOn,...parsed.categoriesOn};}
+if(!Array.isArray(incoming)||!incoming.length)throw new Error('No item array found.');let normalized=incoming.map((x,i)=>({id:String(x.id??x.uid??x.key??('import-'+Date.now()+'-'+i)),name:String(x.name??x.title??x.label??x.type??'Unnamed item'),category:String(x.family??x.category??x.type??x.group??x.kind??'Other'),family:String(x.family??x.category??x.type??x.group??x.kind??'Other'),variant:String(x.variant??x.subtype??x.enemyVariant??''),layer:String(x.layer??x.mapLayer??x.world??'Unknown'),region:String(x.region??x.area??x.location??''),coordinates:x.coordinates??x.coords??x.position??'',notes:String(x.notes??x.description??''),url:String(x.url??x.guideUrl??''),done:Boolean(x.done??x.completed??x.checked??false)}));
+if(confirm(`Import ${normalized.length} items? OK replaces the current checklist; Cancel merges by ID.`)){items=normalized;}else{let byId=new Map(items.map(x=>[x.id,x]));normalized.forEach(x=>{if(!byId.has(x.id))items.push(x);else if(x.done)byId.get(x.id).done=true;});}
+save();renderAll();alert(`Imported ${normalized.length} items.`);}catch(err){alert('Import failed: '+err.message+'\\nExpected JSON array/object or CSV with columns like id,name,category,layer,region,coordinates,url.');}e.target.value='';};
+function parseCSV(text){let lines=text.trim().split(/\r?\n/);if(lines.length<2)return [];function split(line){let out=[],cur='',q=false;for(let i=0;i<line.length;i++){let c=line[i];if(c==='"'&&line[i+1]==='"'&&q){cur+='"';i++;}else if(c==='"')q=!q;else if(c===','&&!q){out.push(cur);cur='';}else cur+=c;}out.push(cur);return out;}let heads=split(lines.shift()).map(x=>x.trim());return lines.filter(Boolean).map(line=>{let vals=split(line),o={};heads.forEach((h,i)=>o[h]=vals[i]||'');return o;});}
+renderAll();
+</script>
+</body></html>
